@@ -22,30 +22,49 @@ pak::pak("hypertidy/timenow")
 library(timenow)
 # basic usage
 timenow()
-#> 2026-02-03 10:34:46 (UTC)
-#> 2026-02-03 10:34:46 (Etc/UTC)
-#> same as UTC
+#> timenow: using timezone from R_TIMENOW_TZ
+#> 2026-02-03 10:51:12 (UTC)
+#> 2026-02-03 21:51:12 (Australia/Sydney)
+#> +11h from UTC
 
 # fuzzy timezone matching
 timenow("Perth")
-#> 2026-02-03 10:34:46 (UTC)
-#> 2026-02-03 18:34:46 (Australia/Perth)
+#> 2026-02-03 10:51:12 (UTC)
+#> 2026-02-03 18:51:12 (Australia/Perth)
 #> +8h from UTC
+
 timenow("new york")
-#> 2026-02-03 10:34:46 (UTC)
-#> 2026-02-03 05:34:46 (America/New_York)
+#> 2026-02-03 10:51:12 (UTC)
+#> 2026-02-03 05:51:12 (America/New_York)
 #> -5h from UTC
+
 timenow("tokyo")
-#> 2026-02-03 10:34:46 (UTC)
-#> 2026-02-03 19:34:46 (Asia/Tokyo)
+#> 2026-02-03 10:51:12 (UTC)
+#> 2026-02-03 19:51:12 (Asia/Tokyo)
 #> +9h from UTC
+```
+
+Oops what about the default up there?
+
+``` r
+options("timenow.tz" = "Australia/Melbourne")
+timenow()
+#> timenow: using timezone from option 'timenow.tz'
+#> 2026-02-03 10:51:12 (UTC)
+#> 2026-02-03 21:51:12 (Australia/Melbourne)
+#> +11h from UTC
+
+# or, more permanent for user, and gives a detailed summary of what is done
+# timenow_set("Sydney")
 ```
 
 ## Why?
 
-When working with vessels or traverses or servers where wall time or
-`Sys.timezone()` returns `"UTC"`, it’s handy to still see your local
-time. `timenow` uses a detection cascade to find your actual timezone.
+When working with servers or polar tractor traverses where wall time or
+`Sys.timezone()` returns `"UTC"` or something else, it’s handy to see
+what local and UTC time is.
+
+`timenow` uses a detection cascade to find your actual timezone.
 
 ## Configuration
 

@@ -36,14 +36,28 @@ timenow()
 
 # fuzzy timezone matching
 timenow("Perth")
+
 timenow("new york")
+
 timenow("tokyo")
+```
+
+Oops what about the default up there? 
+
+```{r default-problem}
+options("timenow.tz" = "Australia/Melbourne")
+timenow()
+
+# or, more permanent for user, and gives a detailed summary of what is done
+# timenow_set("Sydney")
 ```
 
 ## Why?
 
-When working with vessels or traverses or servers where wall time or
-`Sys.timezone()` returns `"UTC"`, it's handy to still see your local time.
+When working with servers or polar tractor traverses where wall time
+or `Sys.timezone()` returns `"UTC"` or something else, it's handy to see what
+local and UTC time is. 
+
 `timenow` uses a detection cascade to find your actual timezone.
 
 
