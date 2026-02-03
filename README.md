@@ -22,25 +22,24 @@ pak::pak("hypertidy/timenow")
 library(timenow)
 # basic usage
 timenow()
-#> timenow: using timezone from R_TIMENOW_TZ
-#> 2026-02-03 10:51:12 (UTC)
-#> 2026-02-03 21:51:12 (Australia/Sydney)
-#> +11h from UTC
+#> 2026-02-03 11:07:32 (UTC)
+#> 2026-02-03 11:07:32 (Etc/UTC)
+#> same as UTC
 
 # fuzzy timezone matching
 timenow("Perth")
-#> 2026-02-03 10:51:12 (UTC)
-#> 2026-02-03 18:51:12 (Australia/Perth)
+#> 2026-02-03 11:07:32 (UTC)
+#> 2026-02-03 19:07:32 (Australia/Perth)
 #> +8h from UTC
 
 timenow("new york")
-#> 2026-02-03 10:51:12 (UTC)
-#> 2026-02-03 05:51:12 (America/New_York)
+#> 2026-02-03 11:07:32 (UTC)
+#> 2026-02-03 06:07:32 (America/New_York)
 #> -5h from UTC
 
 timenow("tokyo")
-#> 2026-02-03 10:51:12 (UTC)
-#> 2026-02-03 19:51:12 (Asia/Tokyo)
+#> 2026-02-03 11:07:32 (UTC)
+#> 2026-02-03 20:07:32 (Asia/Tokyo)
 #> +9h from UTC
 ```
 
@@ -50,12 +49,12 @@ Oops what about the default up there?
 options("timenow.tz" = "Australia/Melbourne")
 timenow()
 #> timenow: using timezone from option 'timenow.tz'
-#> 2026-02-03 10:51:12 (UTC)
-#> 2026-02-03 21:51:12 (Australia/Melbourne)
+#> 2026-02-03 11:07:32 (UTC)
+#> 2026-02-03 22:07:32 (Australia/Melbourne)
 #> +11h from UTC
 
 # or, more permanent for user, and gives a detailed summary of what is done
-# timenow_set("Sydney")
+# timenow_set("Sydney") 
 ```
 
 ## Why?

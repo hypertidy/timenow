@@ -49,7 +49,7 @@ options("timenow.tz" = "Australia/Melbourne")
 timenow()
 
 # or, more permanent for user, and gives a detailed summary of what is done
-# timenow_set("Sydney")
+# timenow_set("Sydney") 
 ```
 
 ## Why?
