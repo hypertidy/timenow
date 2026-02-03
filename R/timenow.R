@@ -69,8 +69,8 @@ timenow <- function(tz = NULL, quiet = FALSE) {
 #' @export
 print.timenow <- function(x, ...) {
   fmt <- "%Y-%m-%d %H:%M:%S"
-  utc_str <- format(x$utc, format = fmt)
-  local_str <- format(x$local, format = fmt)
+  utc_str <- sub("\\.\\d+", "", format(x$utc, format = fmt))
+  local_str <- sub("\\.\\d+", "", format(x$local, format = fmt))
 
   # Get offset from the zoned time info
   info <- clock::zoned_time_info(x$local)

@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 
 Quick timezone-aware timestamps for R.
 
+Note that we `floor()` to integer seconds for aesthetic reasons. This might change or become optional. 
+
 ```r
 # install.packages("pak")
 pak::pak("hypertidy/timenow")  

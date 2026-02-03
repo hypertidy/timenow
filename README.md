@@ -9,6 +9,9 @@
 
 Quick timezone-aware timestamps for R.
 
+Note that we `floor()` to integer seconds for aesthetic reasons. This
+might change or become optional.
+
 ``` r
 # install.packages("pak")
 pak::pak("hypertidy/timenow")  
@@ -18,22 +21,22 @@ pak::pak("hypertidy/timenow")
 library(timenow)
 # basic usage
 timenow()
-#> 2026-02-03 10:17:39.884189947 (UTC)
-#> 2026-02-03 10:17:39.885249684 (Etc/UTC)
+#> 2026-02-03 10:30:56 (UTC)
+#> 2026-02-03 10:30:56 (Etc/UTC)
 #> same as UTC
 
 # fuzzy timezone matching
 timenow("Perth")
-#> 2026-02-03 10:17:39.890832530 (UTC)
-#> 2026-02-03 18:17:39.891948212 (Australia/Perth)
+#> 2026-02-03 10:30:56 (UTC)
+#> 2026-02-03 18:30:56 (Australia/Perth)
 #> +8h from UTC
 timenow("new york")
-#> 2026-02-03 10:17:39.893516802 (UTC)
-#> 2026-02-03 05:17:39.895609365 (America/New_York)
+#> 2026-02-03 10:30:56 (UTC)
+#> 2026-02-03 05:30:56 (America/New_York)
 #> -5h from UTC
 timenow("tokyo")
-#> 2026-02-03 10:17:39.898628756 (UTC)
-#> 2026-02-03 19:17:39.899182214 (Asia/Tokyo)
+#> 2026-02-03 10:30:56 (UTC)
+#> 2026-02-03 19:30:56 (Asia/Tokyo)
 #> +9h from UTC
 ```
 
