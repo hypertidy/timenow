@@ -1,0 +1,13 @@
+Package: timenow
+Title: Quick Timezone-Aware Timestamps
+Version: 0.1.0
+Authors@R: person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre"))
+Description: Simple helpers to report the current time in UTC and your local
+    timezone, with sensible detection heuristics when the system timezone is UTC.
+    Supports fuzzy matching of timezone names like "Perth Australia".
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    clock
