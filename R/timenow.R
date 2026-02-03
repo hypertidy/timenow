@@ -28,6 +28,7 @@
 #' ## Setting your timezone
 #'
 #' In `~/.Renviron`:
+#'
 #' ```
 #' R_TIMENOW_TZ=Australia/Hobart
 #' ```

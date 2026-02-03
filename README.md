@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Quick timezone-aware timestamps for R.
@@ -21,22 +22,22 @@ pak::pak("hypertidy/timenow")
 library(timenow)
 # basic usage
 timenow()
-#> 2026-02-03 10:30:56 (UTC)
-#> 2026-02-03 10:30:56 (Etc/UTC)
+#> 2026-02-03 10:34:46 (UTC)
+#> 2026-02-03 10:34:46 (Etc/UTC)
 #> same as UTC
 
 # fuzzy timezone matching
 timenow("Perth")
-#> 2026-02-03 10:30:56 (UTC)
-#> 2026-02-03 18:30:56 (Australia/Perth)
+#> 2026-02-03 10:34:46 (UTC)
+#> 2026-02-03 18:34:46 (Australia/Perth)
 #> +8h from UTC
 timenow("new york")
-#> 2026-02-03 10:30:56 (UTC)
-#> 2026-02-03 05:30:56 (America/New_York)
+#> 2026-02-03 10:34:46 (UTC)
+#> 2026-02-03 05:34:46 (America/New_York)
 #> -5h from UTC
 timenow("tokyo")
-#> 2026-02-03 10:30:56 (UTC)
-#> 2026-02-03 19:30:56 (Asia/Tokyo)
+#> 2026-02-03 10:34:46 (UTC)
+#> 2026-02-03 19:34:46 (Asia/Tokyo)
 #> +9h from UTC
 ```
 
