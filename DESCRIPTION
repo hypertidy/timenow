@@ -8,6 +8,8 @@ Description: Simple helpers to report the current time in UTC and your local
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
     clock
+URL: https://github.com/hypertidy/timenow
+BugReports: https://github.com/hypertidy/timenow/issues

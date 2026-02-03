@@ -68,31 +68,31 @@ timenow <- function(tz = NULL, quiet = FALSE) {
 
 #' @export
 print.timenow <- function(x, ...) {
-  utc_str <- format(x$utc)
-  local_str <- format(x$local)
-  
-  # Calculate offset in hours/minutes
-  utc_naive <- clock::as_naive_time(x$utc)
-  local_naive <- clock::as_naive_time(x$local)
-  offset_secs <- as.numeric(local_naive - utc_naive, units = "secs")
-  offset_hrs <- offset_secs %/% 3600
-  offset_mins <- abs(offset_secs %% 3600) %/% 60
-  
-  if (offset_secs == 0) {
+  fmt <- "%Y-%m-%d %H:%M:%S"
+  utc_str <- format(x$utc, format = fmt)
+  local_str <- format(x$local, format = fmt)
+
+  # Get offset from the zoned time info
+  info <- clock::zoned_time_info(x$local)
+  offset_secs <- as.integer(info$offset)
+  offset_hrs <- offset_secs %/% 3600L
+  offset_mins <- abs(offset_secs %% 3600L) %/% 60L
+
+  if (offset_secs == 0L) {
     offset_str <- "same as UTC"
   } else {
-    sign <- if (offset_secs > 0) "+" else "-"
-    if (offset_mins == 0) {
+    sign <- if (offset_secs > 0L) "+" else "-"
+    if (offset_mins == 0L) {
       offset_str <- sprintf("%s%dh from UTC", sign, abs(offset_hrs))
     } else {
       offset_str <- sprintf("%s%dh%02dm from UTC", sign, abs(offset_hrs), offset_mins)
     }
   }
-  
+
   cat(utc_str, " (UTC)\n", sep = "")
   cat(local_str, " (", x$local_tz, ")\n", sep = "")
   cat(offset_str, "\n", sep = "")
-  
+
   invisible(x)
 }
 
@@ -272,16 +272,16 @@ Or use fuzzy matching: timenow('Perth Australia')
 timenow_set <- function(tz, renviron = "~/.Renviron", restart = TRUE) {
   # Resolve fuzzy input
   resolved <- resolve_timezone(tz)
-  
+
   renviron <- path.expand(renviron)
-  
+
   # Read existing .Renviron or start fresh
   if (file.exists(renviron)) {
     lines <- readLines(renviron, warn = FALSE)
   } else {
     lines <- character(0)
   }
-  
+
   # Find and remove any existing R_TIMENOW_TZ line
   tz_pattern <- "^R_TIMENOW_TZ="
   existing_idx <- grep(tz_pattern, lines)
@@ -290,29 +290,29 @@ timenow_set <- function(tz, renviron = "~/.Renviron", restart = TRUE) {
     lines <- lines[-existing_idx]
     message("Replacing R_TIMENOW_TZ=", old_val)
   }
-  
+
   # Add new line
   new_line <- paste0("R_TIMENOW_TZ=", resolved)
   lines <- c(lines, new_line)
-  
+
   # Write back
   writeLines(lines, renviron)
-  
+
   cat("\n")
   cat("Added to", renviron, ":\n")
   cat(" ", new_line, "\n\n")
-  
+
   # Also set for current session
   Sys.setenv(R_TIMENOW_TZ = resolved)
   cat("Set for current session too.\n\n")
-  
+
   # Show what it looks like now
   cat("Current time:\n")
   timenow(quiet = TRUE)
-  
+
   if (restart && interactive()) {
     cat("\nRestart R for this to take effect in new sessions.\n")
   }
-  
+
   invisible(resolved)
 }

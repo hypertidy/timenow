@@ -1,0 +1,79 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# timenow
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+
+Quick timezone-aware timestamps for R.
+
+```r
+# install.packages("pak")
+pak::pak("hypertidy/timenow")  
+```
+
+```{r basic}
+library(timenow)
+# basic usage
+timenow()
+
+# fuzzy timezone matching
+timenow("Perth")
+timenow("new york")
+timenow("tokyo")
+```
+
+## Why?
+
+When working with vessels or traverses or servers where wall time or
+`Sys.timezone()` returns `"UTC"`, it's handy to still see your local time.
+`timenow` uses a detection cascade to find your actual timezone.
+
+
+## Configuration
+
+If your system is UTC, set your timezone with:
+
+```r
+timenow_set("Hobart")
+# or fuzzy:
+timenow_set("Perth Australia")
+```
+
+This writes to `~/.Renviron` and takes effect next session (also sets it for the current session).
+
+Or manually add to `~/.Renviron`:
+
+```
+R_TIMENOW_TZ=Australia/Hobart
+```
+
+Or run `timenow_help()` for more options.
+
+## Timezone detection cascade
+
+1. `getOption("timenow.tz")`
+2. `Sys.getenv("R_TIMENOW_TZ")`
+3. `/etc/timezone` (Debian/Ubuntu)
+4. `timedatectl show --property=Timezone` (systemd)
+5. `Sys.timezone()`
+
+
+## Code of Conduct
+  
+Please note that the timenow project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
