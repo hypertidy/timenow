@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/timenow)](https://CRAN.R-project.org/package=timenow)
 <!-- badges: end -->
 
 Quick timezone-aware timestamps for R.
@@ -22,25 +24,32 @@ pak::pak("hypertidy/timenow")
 library(timenow)
 # basic usage
 timenow()
-#> 2026-02-03 11:07:32 (UTC)
-#> 2026-02-03 11:07:32 (Etc/UTC)
-#> same as UTC
+#> timenow: using timezone from option 'timenow.tz'
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 17:20:39 (Australia/Hobart)
+#> +11h from UTC
 
 # fuzzy timezone matching
 timenow("Perth")
-#> 2026-02-03 11:07:32 (UTC)
-#> 2026-02-03 19:07:32 (Australia/Perth)
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 14:20:39 (Australia/Perth)
 #> +8h from UTC
 
 timenow("new york")
-#> 2026-02-03 11:07:32 (UTC)
-#> 2026-02-03 06:07:32 (America/New_York)
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 01:20:39 (America/New_York)
 #> -5h from UTC
 
 timenow("tokyo")
-#> 2026-02-03 11:07:32 (UTC)
-#> 2026-02-03 20:07:32 (Asia/Tokyo)
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 15:20:39 (Asia/Tokyo)
 #> +9h from UTC
+
+timenow("Hobart USA")
+#> timenow: resolved 'Hobart USA' to America/Chicago via geocoding (Hobart, Hobart Township, Lake County, Indiana, 46342, United States)
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 00:20:39 (America/Chicago)
+#> -6h from UTC
 ```
 
 Oops what about the default up there?
@@ -49,8 +58,8 @@ Oops what about the default up there?
 options("timenow.tz" = "Australia/Melbourne")
 timenow()
 #> timenow: using timezone from option 'timenow.tz'
-#> 2026-02-03 11:07:32 (UTC)
-#> 2026-02-03 22:07:32 (Australia/Melbourne)
+#> 2026-03-06 06:20:39 (UTC)
+#> 2026-03-06 17:20:39 (Australia/Melbourne)
 #> +11h from UTC
 
 # or, more permanent for user, and gives a detailed summary of what is done

@@ -12,12 +12,14 @@ timenow(tz = NULL, quiet = FALSE)
 \item NULL (default): show UTC and detected local timezone
 \item A valid IANA timezone name: "Australia/Hobart"
 \item A fuzzy string: "Perth Australia", "new york", "tokyo"
+\item A place name: "Jackson, TN", "Davis Station, Antarctica"
+(requires the \pkg{location} package)
 }}
 
 \item{quiet}{Suppress the local timezone detection message}
 }
 \value{
-A named list of class "timenow" with UTC and local times (invisibly
+A named list of class "timenow" with UTC and local times (invisibly)
 }
 \description{
 Reports the current timestamp in UTC and optionally in a local or specified

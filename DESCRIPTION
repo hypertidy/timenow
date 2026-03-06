@@ -1,6 +1,6 @@
 Package: timenow
 Title: Quick Timezone-Aware Timestamps
-Version: 0.1.0
+Version: 0.1.0.9001
 Authors@R: person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre"))
 Description: Simple helpers to report the current time in UTC and your local
     timezone, with sensible detection heuristics when the system timezone is UTC.
@@ -13,3 +13,7 @@ Imports:
     clock
 URL: https://github.com/hypertidy/timenow
 BugReports: https://github.com/hypertidy/timenow/issues
+Suggests: 
+    location,
+    lutz
+Remotes: hypertidy/location

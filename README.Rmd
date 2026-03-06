@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/timenow)](https://CRAN.R-project.org/package=timenow)
 <!-- badges: end -->
 
 
@@ -40,6 +41,8 @@ timenow("Perth")
 timenow("new york")
 
 timenow("tokyo")
+
+timenow("Hobart USA")
 ```
 
 Oops what about the default up there? 

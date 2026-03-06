@@ -7,17 +7,25 @@
 resolve_timezone(tz)
 }
 \arguments{
-\item{tz}{A timezone string, possibly fuzzy like "Perth" or "US Eastern"}
+\item{tz}{A timezone string, possibly fuzzy like "Perth" or "US Eastern",
+or a place name like "Jackson, TN" (requires \pkg{location}).}
 }
 \value{
 A valid IANA timezone string
 }
 \description{
 Matches partial or fuzzy timezone specifications against IANA timezone
-names.
+names. If the string cannot be matched directly, and the \pkg{location}
+package is installed, it will attempt to geocode the string via Nominatim
+and derive the timezone from the resulting coordinates.
 }
 \examples{
 resolve_timezone("Perth")
 resolve_timezone("new york")
 resolve_timezone("tokyo")
+\dontrun{
+# requires location + lutz packages
+resolve_timezone("Jackson, TN")
+resolve_timezone("Davis Station, Antarctica")
+}
 }

@@ -8,9 +8,11 @@
 #'   - NULL (default): show UTC and detected local timezone
 #'   - A valid IANA timezone name: "Australia/Hobart"
 #'   - A fuzzy string: "Perth Australia", "new york", "tokyo"
+#'   - A place name: "Jackson, TN", "Davis Station, Antarctica"
+#'     (requires the \pkg{location} package)
 #' @param quiet Suppress the local timezone detection message
 #'
-#' @return A named list of class "timenow" with UTC and local times (invisibly
+#' @return A named list of class "timenow" with UTC and local times (invisibly)
 #'
 #' @details
 #' ## Timezone detection cascade
@@ -19,7 +21,6 @@
 #' cascade to find your actual local timezone:
 #'
 #' 1. `getOption("timenow.tz")` - set in .Rprofile
-
 #' 2. `Sys.getenv("R_TIMENOW_TZ")` - set in .Renviron
 #' 3. `/etc/timezone` file (Debian/Ubuntu)
 #' 4. `timedatectl` output (systemd)
@@ -47,24 +48,25 @@ timenow <- function(tz = NULL, quiet = FALSE) {
   utc_now <- clock::zoned_time_now("UTC")
 
   if (is.null(tz)) {
-    local_tz <- detect_timezone(quiet = quiet)
+    local_tzs <- detect_timezone(quiet = quiet)
   } else {
-    local_tz <- resolve_timezone(tz)
+    local_tzs <- vapply(tz, resolve_timezone, character(1L), USE.NAMES = FALSE)
   }
 
-  local_now <- clock::zoned_time_now(local_tz)
+  out <- lapply(local_tzs, function(ltz) {
+    structure(
+      list(
+        utc      = utc_now,
+        local    = clock::zoned_time_now(ltz),
+        local_tz = ltz
+      ),
+      class = "timenow"
+    )
+  })
 
-  out <- structure(
-    list(
-      utc = utc_now,
-      local = local_now,
-      local_tz = local_tz
-    ),
-    class = "timenow"
-  )
+  lapply(out, print)
 
-  print(out)
-  invisible(out)
+  if (length(out) == 1L) invisible(out[[1L]]) else invisible(out)
 }
 
 #' @export
@@ -155,15 +157,23 @@ detect_timezone <- function(quiet = FALSE) {
 #' Resolve a fuzzy timezone string
 #'
 #' Matches partial or fuzzy timezone specifications against IANA timezone
-#' names.
+#' names. If the string cannot be matched directly, and the \pkg{location}
+#' package is installed, it will attempt to geocode the string via Nominatim
+#' and derive the timezone from the resulting coordinates.
 #'
-#' @param tz A timezone string, possibly fuzzy like "Perth" or "US Eastern"
+#' @param tz A timezone string, possibly fuzzy like "Perth" or "US Eastern",
+#'   or a place name like "Jackson, TN" (requires \pkg{location}).
 #' @return A valid IANA timezone string
 #' @export
 #' @examples
 #' resolve_timezone("Perth")
 #' resolve_timezone("new york")
 #' resolve_timezone("tokyo")
+#' \dontrun{
+#' # requires location + lutz packages
+#' resolve_timezone("Jackson, TN")
+#' resolve_timezone("Davis Station, Antarctica")
+#' }
 resolve_timezone <- function(tz) {
   # If already valid, return as-is
   if (is_valid_tz(tz)) {
@@ -188,12 +198,29 @@ resolve_timezone <- function(tz) {
     return(all_tz[grep_idx])
   }
   if (length(grep_idx) > 1) {
-    # Prefer shorter matches (more specific)
     matches <- all_tz[grep_idx]
     return(matches[which.min(nchar(matches))])
   }
 
-  # Try agrep (fuzzy)
+  # Geocode via location + lutz (if available)
+  if (requireNamespace("location", quietly = TRUE) &&
+      requireNamespace("lutz", quietly = TRUE)) {
+    geo_tz <- tryCatch({
+      coords <- location::loc(tz)
+      if (!is.na(coords$lat)) {
+        result <- lutz::tz_lookup_coords(coords$lat, coords$lon,
+                                         method = "fast", warn = FALSE)
+        if (!is.na(result) && is_valid_tz(result)) {
+          message("timenow: resolved '", tz, "' to ", result,
+                  " via geocoding (", coords$display_name, ")")
+          result
+        }
+      }
+    }, error = function(e) NULL)
+    if (!is.null(geo_tz)) return(geo_tz)
+  }
+
+  # Try agrep (fuzzy) as last resort before giving up
   agrep_idx <- agrep(tz, all_tz, ignore.case = TRUE, max.distance = 0.2)
   if (length(agrep_idx) >= 1) {
     matches <- all_tz[agrep_idx]
@@ -201,7 +228,10 @@ resolve_timezone <- function(tz) {
   }
 
   stop("Could not resolve timezone '", tz, "'. ",
-       "Use clock::tzdb_names() to see valid options.", call. = FALSE)
+       "Use clock::tzdb_names() to see valid options.",
+       if (!requireNamespace("location", quietly = TRUE))
+         " Install the 'location' package for geocoding support.",
+       call. = FALSE)
 }
 
 #' Check if a timezone string is valid
@@ -236,6 +266,7 @@ Option 2: R option
 Add to ~/.Rprofile:
 
     options(timenow.tz = \"Australia/Hobart\")
+
 Option 3: System timezone (Ubuntu/Debian)
 -----------------------------------------
     sudo timedatectl set-timezone Australia/Hobart
@@ -250,7 +281,8 @@ timenow checks in order:
 5. Sys.timezone()
 
 Find valid timezone names with: clock::tzdb_names()
-Or use fuzzy matching: timenow('Perth Australia')
+Or use fuzzy matching:    timenow('Perth Australia')
+Or use place names:       timenow('Jackson, TN')  # requires location + lutz
 ")
 }
 
@@ -271,19 +303,16 @@ Or use fuzzy matching: timenow('Perth Australia')
 #' timenow_set("Perth Australia")
 #' }
 timenow_set <- function(tz, renviron = "~/.Renviron", restart = TRUE) {
-  # Resolve fuzzy input
   resolved <- resolve_timezone(tz)
 
   renviron <- path.expand(renviron)
 
-  # Read existing .Renviron or start fresh
   if (file.exists(renviron)) {
     lines <- readLines(renviron, warn = FALSE)
   } else {
     lines <- character(0)
   }
 
-  # Find and remove any existing R_TIMENOW_TZ line
   tz_pattern <- "^R_TIMENOW_TZ="
   existing_idx <- grep(tz_pattern, lines)
   if (length(existing_idx) > 0) {
@@ -292,22 +321,17 @@ timenow_set <- function(tz, renviron = "~/.Renviron", restart = TRUE) {
     message("Replacing R_TIMENOW_TZ=", old_val)
   }
 
-  # Add new line
   new_line <- paste0("R_TIMENOW_TZ=", resolved)
   lines <- c(lines, new_line)
-
-  # Write back
   writeLines(lines, renviron)
 
   cat("\n")
   cat("Added to", renviron, ":\n")
   cat(" ", new_line, "\n\n")
 
-  # Also set for current session
   Sys.setenv(R_TIMENOW_TZ = resolved)
   cat("Set for current session too.\n\n")
 
-  # Show what it looks like now
   cat("Current time:\n")
   timenow(quiet = TRUE)
 
