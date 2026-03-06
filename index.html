@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">timenow</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9001</span>
       </span>
     </div>
 
@@ -41,6 +41,9 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -76,32 +79,39 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/timenow" class="external-link">timenow</a></span><span class="op">)</span></span>
 <span><span class="co"># basic usage</span></span>
 <span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (UTC)</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (Etc/UTC)</span></span>
-<span><span class="co">#&gt; same as UTC</span></span>
+<span><span class="co">#&gt; timenow: using timezone from option 'timenow.tz'</span></span>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 17:20:39 (Australia/Hobart)</span></span>
+<span><span class="co">#&gt; +11h from UTC</span></span>
 <span></span>
 <span><span class="co"># fuzzy timezone matching</span></span>
 <span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="st">"Perth"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (UTC)</span></span>
-<span><span class="co">#&gt; 2026-02-03 19:07:32 (Australia/Perth)</span></span>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 14:20:39 (Australia/Perth)</span></span>
 <span><span class="co">#&gt; +8h from UTC</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="st">"new york"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (UTC)</span></span>
-<span><span class="co">#&gt; 2026-02-03 06:07:32 (America/New_York)</span></span>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 01:20:39 (America/New_York)</span></span>
 <span><span class="co">#&gt; -5h from UTC</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="st">"tokyo"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (UTC)</span></span>
-<span><span class="co">#&gt; 2026-02-03 20:07:32 (Asia/Tokyo)</span></span>
-<span><span class="co">#&gt; +9h from UTC</span></span></code></pre></div>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 15:20:39 (Asia/Tokyo)</span></span>
+<span><span class="co">#&gt; +9h from UTC</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="st">"Hobart USA"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; timenow: resolved 'Hobart USA' to America/Chicago via geocoding (Hobart, Hobart Township, Lake County, Indiana, 46342, United States)</span></span>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 00:20:39 (America/Chicago)</span></span>
+<span><span class="co">#&gt; -6h from UTC</span></span></code></pre></div>
 <p>Oops what about the default up there?</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"timenow.tz"</span> <span class="op">=</span> <span class="st">"Australia/Melbourne"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/timenow.html">timenow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; timenow: using timezone from option 'timenow.tz'</span></span>
-<span><span class="co">#&gt; 2026-02-03 11:07:32 (UTC)</span></span>
-<span><span class="co">#&gt; 2026-02-03 22:07:32 (Australia/Melbourne)</span></span>
+<span><span class="co">#&gt; 2026-03-06 06:20:39 (UTC)</span></span>
+<span><span class="co">#&gt; 2026-03-06 17:20:39 (Australia/Melbourne)</span></span>
 <span><span class="co">#&gt; +11h from UTC</span></span>
 <span></span>
 <span><span class="co"># or, more permanent for user, and gives a detailed summary of what is done</span></span>
@@ -188,6 +198,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/hypertidy/timenow/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=timenow" class="external-link"><img src="https://www.r-pkg.org/badges/version/timenow" alt="CRAN status"></a></li>
 </ul>
 </div>
 
