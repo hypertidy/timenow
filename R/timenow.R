@@ -212,7 +212,7 @@ resolve_timezone <- function(tz) {
                                          method = "fast", warn = FALSE)
         if (!is.na(result) && is_valid_tz(result)) {
           message("timenow: resolved '", tz, "' to ", result,
-                  " via geocoding (", coords$display_name, ")")
+                  " via geocoding (", coords$name, ")")
           result
         }
       }
